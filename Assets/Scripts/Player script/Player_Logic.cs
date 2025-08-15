@@ -29,8 +29,11 @@ public class Player_Logic : MonoBehaviour
     {
         controls = GetComponent<CharacterController>();
         playerinput = new PlayerInput();
+        //to start the movement of character with keyboard
         playerinput.CharacterControls.Move.started += onMovementInput;
+        //to stop the movement of character with keyboard
         playerinput.CharacterControls.Move.canceled += onMovementInput;
+        //to start the movement of character with controller
         playerinput.CharacterControls.Move.performed += onMovementInput;
     }
 
