@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,6 +19,7 @@ public class Player_Logic : MonoBehaviour
     private float _gravity = -9.81f;
     [SerializeField] private float gravityScale = 1;
     private float _velocity;
+    private float _jumpVelocity = 20f;
 
 
     //functions
@@ -53,6 +55,10 @@ public class Player_Logic : MonoBehaviour
         playerinput.CharacterControls.Move.canceled += onMovementInput;
         //to start the movement of character with controller
         playerinput.CharacterControls.Move.performed += onMovementInput;
+    }
+    void applyJump()
+    {
+        
     }
 
     // Update is called once per frame
