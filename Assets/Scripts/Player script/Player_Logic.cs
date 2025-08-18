@@ -1,18 +1,20 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-
+[RequireComponent(typeof(CharacterController))]
 public class Player_Logic : MonoBehaviour
 {
+    
     [SerializeField] CharacterController controls;
     public PlayerInput playerinput;
 
     //variables
-    private Vector2 _currentMovementInput;
+    private Vector2 _Input;
     private Vector3 _currentMovement;
     private bool _isMovementPressed;
     private float _movementSpeed = 5;
@@ -26,10 +28,10 @@ public class Player_Logic : MonoBehaviour
     void onMovementInput(InputAction.CallbackContext Context) //for movement function
     {
         //movement of character
-        _currentMovementInput = Context.ReadValue<Vector2>();
-        _currentMovement.x = _currentMovementInput.x;
-        _currentMovement.y = _currentMovementInput.y;
-        _isMovementPressed = _currentMovementInput.x != 0 || _currentMovementInput.y != 0;
+        _Input = Context.ReadValue<Vector2>();
+        _currentMovement.x = _Input.x;
+        _currentMovement.y = _Input.y;
+        _isMovementPressed = _Input.x != 0 || _Input.y != 0;
     }
     void applyGravity() // for gravity function
     {
@@ -42,6 +44,10 @@ public class Player_Logic : MonoBehaviour
             _velocity += _gravity * gravityScale * Time.deltaTime;
         }
         _currentMovement.y += _velocity;
+    }
+    void applyJump(InputAction.CallbackContext Context)
+    {
+        
     }
     
 
@@ -56,10 +62,7 @@ public class Player_Logic : MonoBehaviour
         //to start the movement of character with controller
         playerinput.CharacterControls.Move.performed += onMovementInput;
     }
-    void applyJump()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
