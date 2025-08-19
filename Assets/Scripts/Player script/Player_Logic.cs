@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
@@ -25,14 +26,15 @@ public class Player_Logic : MonoBehaviour
 
 
     //functions
-    void onMovementInput(InputAction.CallbackContext Context) //for movement function
+    public void onMovementInput(InputAction.CallbackContext context) //for movement function
     {
         //movement of character
-        _Input = Context.ReadValue<Vector2>();
+        _Input = context.ReadValue<Vector2>();
         _currentMovement.x = _Input.x;
         _currentMovement.y = _Input.y;
         _isMovementPressed = _Input.x != 0 || _Input.y != 0;
     }
+
     void applyGravity() // for gravity function
     {
         if (controls.isGrounded && _velocity<0)
@@ -44,10 +46,6 @@ public class Player_Logic : MonoBehaviour
             _velocity += _gravity * gravityScale * Time.deltaTime;
         }
         _currentMovement.y += _velocity;
-    }
-    void applyJump(InputAction.CallbackContext Context)
-    {
-        
     }
     
 
@@ -67,6 +65,8 @@ public class Player_Logic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var targetAngle = Mathf.Atan2(_Input.x,_Input.y)*Mathf.Rad2Deg;
+        transform.rotation = quaternion.Euler(0,targetAngle,0);
         applyGravity();
         controls.Move(_currentMovement * _movementSpeed * Time.deltaTime);
     }
