@@ -32,8 +32,8 @@ public class Player_Logic : MonoBehaviour
     private bool isJumpPressed = false;
     private float _jumpVelocity = 20f;
     private float _initialJumpVelocity;
-    private float _maxJumpHeight;
-    private float _maxJumpTIme;
+    private float _maxJumpHeight = 1f;
+    private float _maxJumpTIme = 0.5f;
     private bool _isjumping = false;
 
 
@@ -55,7 +55,19 @@ public class Player_Logic : MonoBehaviour
     #region OnJump
     private void setupJumpVariable()
     {
-        
+        float timeToApex = _maxJumpTIme / 2;
+        _gravity = (-2 * _maxJumpHeight) / Mathf.Pow(timeToApex, 2);
+        _initialJumpVelocity = (2 * _maxJumpHeight) / timeToApex;
+    }
+
+    private void handleJumping()
+    {
+        if (!_isjumping && controls.isGrounded && isJumpPressed)
+        {
+            _isjumping = true;
+            _currentMovement.y = _initialJumpVelocity*_jumpVelocity;
+        }else{ _isjumping = false; }
+
     }
 
     public void onJump(InputAction.CallbackContext context)
@@ -77,7 +89,7 @@ public class Player_Logic : MonoBehaviour
         }
         else
         {
-            _velocity += _gravity * fallMultiplier * Time.deltaTime;
+            _velocity += _gravity * Time.deltaTime;
         }
         _currentMovement.y += _velocity;
     }
@@ -115,6 +127,7 @@ public class Player_Logic : MonoBehaviour
         var targetAngle = Mathf.Atan2(_Input.x, _Input.y) * Mathf.Rad2Deg;
         transform.rotation = quaternion.Euler(0, targetAngle, 0);
         applyGravity();
+        handleJumping();
         controls.Move(_currentMovement * _movementSpeed * Time.deltaTime);
     }
 
