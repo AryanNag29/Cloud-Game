@@ -93,7 +93,7 @@ public class Player_Logic : MonoBehaviour
         }
         else
         {
-            _velocity += _gravity * Mathf.Pow(Time.deltaTime,2);
+            _velocity += _gravity * Mathf.Pow(Time.deltaTime,2); // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
         }
         _currentMovement.y += _velocity;
     }
