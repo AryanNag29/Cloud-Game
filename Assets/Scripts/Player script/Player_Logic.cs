@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(CharacterController))]
 public class Player_Logic : MonoBehaviour
 {
-    
+
     [SerializeField] CharacterController controls;
     public PlayerInput playerinput;
 
@@ -25,6 +25,7 @@ public class Player_Logic : MonoBehaviour
     private float _jumpVelocity = 20f;
 
 
+
     //functions
     public void onMovementInput(InputAction.CallbackContext context) //for movement function
     {
@@ -35,9 +36,10 @@ public class Player_Logic : MonoBehaviour
         _isMovementPressed = _Input.x != 0 || _Input.y != 0;
     }
 
+    #region Gravity
     void applyGravity() // for gravity function
     {
-        if (controls.isGrounded && _velocity<0)
+        if (controls.isGrounded && _velocity < 0)
         {
             _velocity = -1f;
         }
@@ -47,8 +49,9 @@ public class Player_Logic : MonoBehaviour
         }
         _currentMovement.y += _velocity;
     }
-    
+    #endregion
 
+    #region Awake 
     void Awake()
     {
         controls = GetComponent<CharacterController>();
@@ -60,25 +63,33 @@ public class Player_Logic : MonoBehaviour
         //to start the movement of character with controller
         playerinput.CharacterControls.Move.performed += onMovementInput;
     }
+    #endregion
 
-
+    #region Update
     // Update is called once per frame
     void Update()
     {
-        var targetAngle = Mathf.Atan2(_Input.x,_Input.y)*Mathf.Rad2Deg;
-        transform.rotation = quaternion.Euler(0,targetAngle,0);
+        var targetAngle = Mathf.Atan2(_Input.x, _Input.y) * Mathf.Rad2Deg;
+        transform.rotation = quaternion.Euler(0, targetAngle, 0);
         applyGravity();
         controls.Move(_currentMovement * _movementSpeed * Time.deltaTime);
     }
+    #endregion
+
+    #region  OnEnable
     void OnEnable()
     {
         //enable player character controles
         playerinput.CharacterControls.Enable();
     }
+    #endregion
 
+
+    #region OnDisable
     void OnDisable()
     {
         //disable player character contoles
         playerinput.CharacterControls.Disable();
     }
+    #endregion
 }
