@@ -25,14 +25,14 @@ public class Player_Logic : MonoBehaviour
     private float _movementSpeed = 5;
     [Header("Gravity and Jump")]
     //gravity variable
-    private float _gravity = -9.81f;
+    private float _gravity = -9.8f;
     [SerializeField] private float fallMultiplier = 1.7f;
     private float _velocity;
     //jump variable
     private bool isJumpPressed = false;
     private float _jumpVelocity = 20f;
     private float _initialJumpVelocity;
-    private float _maxJumpHeight = 1f;
+    private float _maxJumpHeight = 3f;
     private float _maxJumpTIme = 0.5f;
     private bool _isjumping = false;
 
@@ -65,8 +65,12 @@ public class Player_Logic : MonoBehaviour
         if (!_isjumping && controls.isGrounded && isJumpPressed)
         {
             _isjumping = true;
-            _currentMovement.y = _initialJumpVelocity*_jumpVelocity;
-        }else{ _isjumping = false; }
+            _currentMovement.y = _initialJumpVelocity;
+        }
+        else if (!isJumpPressed && _isjumping && controls.isGrounded)
+        {
+            _isjumping = false;
+        }
 
     }
 
@@ -89,7 +93,7 @@ public class Player_Logic : MonoBehaviour
         }
         else
         {
-            _velocity += _gravity * Time.deltaTime;
+            _velocity += _gravity * Mathf.Pow(Time.deltaTime,2);
         }
         _currentMovement.y += _velocity;
     }
