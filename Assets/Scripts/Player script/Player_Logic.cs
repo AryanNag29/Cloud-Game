@@ -114,7 +114,7 @@ public class Player_Logic : MonoBehaviour
         //to start the movement of character with controller
         playerinput.CharacterControls.Move.performed += onMovement;
 
-        //player jump read
+        //player jump read 
         playerinput.CharacterControls.Jump.started += onJump;
         playerinput.CharacterControls.Jump.canceled += onJump;
         setupJumpVariable();
