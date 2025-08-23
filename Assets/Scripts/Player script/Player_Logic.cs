@@ -65,7 +65,7 @@ public class Player_Logic : MonoBehaviour
         if (!_isjumping && controls.isGrounded && isJumpPressed)
         {
             _isjumping = true;
-            _currentMovement.y = _initialJumpVelocity;
+            _currentMovement.y = _initialJumpVelocity * 0.5f;
         }
         else if (!isJumpPressed && _isjumping && controls.isGrounded)
         {
@@ -87,15 +87,20 @@ public class Player_Logic : MonoBehaviour
 
     void applyGravity() // for gravity function
     {
+        float previousYVelocity= _currentMovement.y;
+        float newYVelocity = _currentMovement.y + (_gravity *Time.deltaTime) ;
+        float nextYVelocity;
         if (controls.isGrounded && _velocity < 0)
         {
-            _velocity = -1f;
+            nextYVelocity = -1f;
         }
         else
         {
-            _velocity += _gravity * Mathf.Pow(Time.deltaTime,2); // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
+            nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f *Time.deltaTime; // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
+
         }
-        _currentMovement.y += _velocity;
+        _currentMovement.y -= nextYVelocity;
+        
     }
 
     #endregion
