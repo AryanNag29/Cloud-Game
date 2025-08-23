@@ -26,6 +26,7 @@ public class Player_Logic : MonoBehaviour
     [Header("Gravity and Jump")]
     //gravity variable
     private float _gravity = -9.8f;
+    private float _groundedVelocity = -0.05f;
     [SerializeField] private float fallMultiplier = 1.7f;
     private float _velocity;
     //jump variable
@@ -87,19 +88,18 @@ public class Player_Logic : MonoBehaviour
 
     void applyGravity() // for gravity function
     {
-        float previousYVelocity= _currentMovement.y;
-        float newYVelocity = _currentMovement.y + (_gravity *Time.deltaTime) ;
-        float nextYVelocity;
-        if (controls.isGrounded && _velocity < 0)
+        if (controls.isGrounded)
         {
-            nextYVelocity = -1f;
+            _currentMovement.y += _groundedVelocity;
         }
         else
         {
-            nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f *Time.deltaTime; // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
-
+            float previousYVelocity = _currentMovement.y;
+            float newYVelocity = _currentMovement.y + (_gravity * Time.deltaTime);
+            float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f; // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
+            _currentMovement.y = nextYVelocity;
         }
-        _currentMovement.y -= nextYVelocity;
+        
         
     }
 
