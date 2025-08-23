@@ -99,8 +99,6 @@ public class Player_Logic : MonoBehaviour
             float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f; // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
             _currentMovement.y = nextYVelocity;
         }
-        
-        
     }
 
     #endregion
