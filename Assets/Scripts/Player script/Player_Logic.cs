@@ -93,7 +93,8 @@ public class Player_Logic : MonoBehaviour
             _currentMovement.y += _groundedVelocity;
         }
         else
-        {
+        {   
+            //velocity varlet integration rule for gravity
             float previousYVelocity = _currentMovement.y;
             float newYVelocity = _currentMovement.y + (_gravity * Time.deltaTime);
             float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f; // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
