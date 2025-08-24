@@ -115,7 +115,7 @@ public class Player_Logic : MonoBehaviour
         //to stop the movement of character with keyboard
         playerinput.CharacterControls.Move.canceled += onMovement;
         //to start the movement of character with controller
-        playerinput.CharacterControls.Move.performed += onMovement;
+        playerinput.CharacterControls.Move.performed += onMovement; 
 
         //player jump read 
         playerinput.CharacterControls.Jump.started += onJump;
