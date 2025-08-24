@@ -88,12 +88,20 @@ public class Player_Logic : MonoBehaviour
 
     void applyGravity() // for gravity function
     {
+        bool isFalling = _currentMovement.y <= 0.0f;
         if (controls.isGrounded)
         {
             _currentMovement.y += _groundedVelocity;
         }
+        else if (isFalling)
+        {
+            float previousYVelocity = _currentMovement.y;
+            float newYVelocity = _currentMovement.y + (_gravity * fallMultiplier * Time.deltaTime);
+            float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
+            _currentMovement.y = nextYVelocity;
+        }
         else
-        {   
+        {
             //velocity varlet integration rule for gravity
             float previousYVelocity = _currentMovement.y;
             float newYVelocity = _currentMovement.y + (_gravity * Time.deltaTime);
