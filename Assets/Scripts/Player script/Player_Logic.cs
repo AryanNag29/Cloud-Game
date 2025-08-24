@@ -33,8 +33,8 @@ public class Player_Logic : MonoBehaviour
     private bool isJumpPressed = false;
     private float _jumpVelocity = 20f;
     private float _initialJumpVelocity;
-    private float _maxJumpHeight = 3f;
-    private float _maxJumpTIme = 0.5f;
+    private float _maxJumpHeight = 4f;
+    private float _maxJumpTIme = 0.75f;
     private bool _isjumping = false;
 
 
@@ -88,7 +88,7 @@ public class Player_Logic : MonoBehaviour
 
     void applyGravity() // for gravity function
     {
-        bool isFalling = _currentMovement.y <= 0.0f;
+        bool isFalling = _currentMovement.y <= 0.0f || !isJumpPressed;
         if (controls.isGrounded)
         {
             _currentMovement.y += _groundedVelocity;
@@ -97,7 +97,7 @@ public class Player_Logic : MonoBehaviour
         {
             float previousYVelocity = _currentMovement.y;
             float newYVelocity = _currentMovement.y + (_gravity * fallMultiplier * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
+            float nextYVelocity = Mathf.Max((previousYVelocity + newYVelocity) * 0.5f,-20.0f);
             _currentMovement.y = nextYVelocity;
         }
         else
