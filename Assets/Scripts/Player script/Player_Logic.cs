@@ -21,19 +21,20 @@ public class Player_Logic : MonoBehaviour
     //movement variable
     private Vector2 _Input;
     private Vector3 _currentMovement;
+    private Vector3 _appliedMovement;
     private bool _isMovementPressed;
     private float _movementSpeed = 5;
     [Header("Gravity and Jump")]
     //gravity variable
     private float _gravity = -9.8f;
     private float _groundedVelocity = -0.05f;
-    [SerializeField] private float fallMultiplier = 1.7f;
+    [SerializeField] private float fallMultiplier = 2f;
     private float _velocity;
     //jump variable
     private bool isJumpPressed = false;
     private float _jumpVelocity = 20f;
     private float _initialJumpVelocity;
-    private float _maxJumpHeight = 4f;
+    private float _maxJumpHeight = 2f;
     private float _maxJumpTIme = 0.75f;
     private bool _isjumping = false;
 
@@ -48,6 +49,12 @@ public class Player_Logic : MonoBehaviour
         _currentMovement.x = _Input.x;
         _currentMovement.y = _Input.y;
         _isMovementPressed = _Input.x != 0 || _Input.y != 0;
+    }
+    private void applyMovement()
+    {
+        _appliedMovement.x = _currentMovement.x;
+        _appliedMovement.y = _currentMovement.y;
+        controls.Move(_appliedMovement * _movementSpeed * Time.deltaTime);
     }
 
     #endregion
@@ -66,7 +73,7 @@ public class Player_Logic : MonoBehaviour
         if (!_isjumping && controls.isGrounded && isJumpPressed)
         {
             _isjumping = true;
-            _currentMovement.y = _initialJumpVelocity * 0.5f;
+            _currentMovement.y = _initialJumpVelocity;
         }
         else if (!isJumpPressed && _isjumping && controls.isGrounded)
         {
@@ -79,7 +86,6 @@ public class Player_Logic : MonoBehaviour
     {
         //jump movement read
         isJumpPressed = context.ReadValueAsButton();
-        UnityEngine.Debug.Log(isJumpPressed);
     }
 
     #endregion
@@ -96,17 +102,15 @@ public class Player_Logic : MonoBehaviour
         else if (isFalling)
         {
             float previousYVelocity = _currentMovement.y;
-            float newYVelocity = _currentMovement.y + (_gravity * fallMultiplier * Time.deltaTime);
-            float nextYVelocity = Mathf.Max((previousYVelocity + newYVelocity) * 0.5f,-20.0f);
-            _currentMovement.y = nextYVelocity;
+            _currentMovement.y = _currentMovement.y + (_gravity * fallMultiplier * Time.deltaTime);
+            _appliedMovement.y = Mathf.Max((previousYVelocity + _currentMovement.y) * 0.5f,-20.0f);
         }
         else
         {
             //velocity varlet integration rule for gravity
             float previousYVelocity = _currentMovement.y;
-            float newYVelocity = _currentMovement.y + (_gravity * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f; // mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
-            _currentMovement.y = nextYVelocity;
+            _currentMovement.y = _currentMovement.y + (_gravity * Time.deltaTime);// mathf.pow for the gravity because gravity always change so it need to multiply with delta time twice like 9.81 m/s^2
+            _appliedMovement.y = (previousYVelocity + _currentMovement.y) * 0.5f; 
         }
     }
 
@@ -144,7 +148,7 @@ public class Player_Logic : MonoBehaviour
         transform.rotation = quaternion.Euler(0, targetAngle, 0);
         applyGravity();
         handleJumping();
-        controls.Move(_currentMovement * _movementSpeed * Time.deltaTime);
+        applyMovement();
     }
 
     #endregion
